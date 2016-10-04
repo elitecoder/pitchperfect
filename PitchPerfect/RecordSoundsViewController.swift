@@ -21,23 +21,17 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
 	
 	// MARK: View Lifecycle methods
 	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-	}
-	
 	override func viewWillAppear(_ animated: Bool) {
-		prepareUIToBeginRecording()
-	}
-
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
+		super.viewWillAppear(animated)
+		
+		prepareUI(label: "Tap to Record", isRecording: false)
 	}
 	
 	// MARK: Action handlers
 	
 	@IBAction func recordAudio(_ sender: AnyObject) {
 
-		prepareUIToStopRecording()
+		prepareUI(label: "Recording in Progress", isRecording: true)
 		
 		// Create file path, where recorded audio will be stored
 		let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0] as String
@@ -60,7 +54,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
 	
 	@IBAction func stopRecording(_ sender: AnyObject) {
 		
-		prepareUIToBeginRecording()
+		prepareUI(label: "Tap to Record", isRecording: false)
 
 		// Stop audio recording
 		audioRecorder.stop()
@@ -73,7 +67,7 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
 	func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
 
 		if (flag) {
-			self.performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
+			performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
 		}
 		else {
 			print("Saving of recorded file failed")
@@ -93,16 +87,10 @@ class RecordSoundsViewController: UIViewController , AVAudioRecorderDelegate {
 	
 	// MARK: UI Update utility methods
 	
-	func prepareUIToStopRecording() {
-		recordingLabel.text = "Recording in progress"
-		recordingButton.isEnabled = false
-		stopRecordingBtn.isEnabled = true
-	}
-	
-	func prepareUIToBeginRecording() {
-		recordingLabel.text = "Tap to Record"
-		recordingButton.isEnabled = true
-		stopRecordingBtn.isEnabled = false
+	func prepareUI(label:String, isRecording:Bool) {
+		recordingLabel.text = label
+		recordingButton.isEnabled = !isRecording
+		stopRecordingBtn.isEnabled = isRecording
 	}
 }
 
