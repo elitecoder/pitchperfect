@@ -36,6 +36,26 @@ class PlaySoundsViewController: UIViewController {
 		setupAudio()
     }
 	
+	override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+		if (UIDevice.current.orientation.isLandscape) {
+			// Fix the squishing of button images in landscape mode on small screen devices
+			changeContentModeForButtons(contentMode: UIViewContentMode.scaleAspectFit)
+		} else {
+			// Revert to original image rendering mode in portrait mode
+			changeContentModeForButtons(contentMode: UIViewContentMode.scaleToFill)
+		}
+	}
+	
+	func changeContentModeForButtons(contentMode : UIViewContentMode) {
+		snailButton.imageView?.contentMode = contentMode
+		rabbitButton.imageView?.contentMode = contentMode
+		chipmunkButton.imageView?.contentMode = contentMode
+		vaderButton.imageView?.contentMode = contentMode
+		echoButton.imageView?.contentMode = contentMode
+		reverbButton.imageView?.contentMode = contentMode
+		stopButton.imageView?.contentMode = contentMode
+	}
+	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		configureUI(playState: .NotPlaying)
